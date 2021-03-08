@@ -73,10 +73,9 @@ class MedicosController extends AbstractController
         $corpoRequisicao = $request->getContent();
         $medicoEnviado = $this->medicoFactory->criarMedico($corpoRequisicao);
 
-        $medicoExistente = $this->buscaMedico($id);
-        if (is_null($medicoExistente)) {
-            return new Response('', Response::HTTP_NOT_FOUND);
-        }
+        $medicoExistente = $this
+            ->entityManager
+            ->getReference(Medico::class, $id);
 
         $medicoExistente->crm = $medicoEnviado->crm;
         $medicoExistente->nome = $medicoEnviado->nome;
@@ -86,7 +85,22 @@ class MedicosController extends AbstractController
         return new JsonResponse($medicoExistente);
     }
 
-    private function buscaMedico(int $id): Medico
+    /**
+     * @Route("/medicos/{id}", methods={"DELETE"})
+     */
+    public function remove(int $id): Response
+    {   
+        $medico = $this
+            ->entityManager
+            ->getReference(Medico::class, $id);
+
+        $this->entityManager->remove($medico);
+        $this->entityManager->flush();
+        
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    private function buscaMedico(int $id): ?Medico
     {
         $repositorioDeMedicos = $this
             ->getDoctrine()
