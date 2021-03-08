@@ -6,7 +6,6 @@ namespace App\Controller;
 use App\Entity\Medico;
 use App\Helper\MedicoFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,8 +76,8 @@ class MedicosController extends AbstractController
             ->entityManager
             ->getReference(Medico::class, $id);
 
-        $medicoExistente->crm = $medicoEnviado->crm;
-        $medicoExistente->nome = $medicoEnviado->nome;
+        $medicoExistente->setCrm($medicoEnviado->getCrm());
+        $medicoExistente->setNome($medicoEnviado->getNome());
 
         $this->entityManager->flush();
 
