@@ -76,8 +76,9 @@ class MedicosController extends AbstractController
             ->entityManager
             ->getReference(Medico::class, $id);
 
-        $medicoExistente->setCrm($medicoEnviado->getCrm());
-        $medicoExistente->setNome($medicoEnviado->getNome());
+        $medicoExistente
+            ->setCrm($medicoEnviado->getCrm())
+            ->setNome($medicoEnviado->getNome());
 
         $this->entityManager->flush();
 
